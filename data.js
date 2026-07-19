@@ -4,7 +4,7 @@ const DATASET_URL =
 /**
  * Fetches and validates the canonical superhero dataset.
  *
- * @returns {Promise<object[]>} The complete superhero dataset.
+ * @returns {Promise<ReadonlyArray<object>>} The complete superhero dataset.
  * @throws {Error} If the request, response, JSON, or dataset shape is invalid.
  */
 async function loadHeroes() {
@@ -18,7 +18,7 @@ async function loadHeroes() {
     throw new Error("Heroes data is not an array");
   }
 
-  return data;
+  return Object.freeze(data);
 }
 
 export { loadHeroes };

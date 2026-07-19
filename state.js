@@ -1,7 +1,7 @@
 /**
  * @typedef {object} AppState
  * @property {"loading"|"ready"|"error"} status
- * @property {object[]} heroes
+ * @property {ReadonlyArray<object>} heroes
  * @property {string} field
  * @property {string} operator
  * @property {string} query
@@ -15,7 +15,7 @@
 /** @type {Readonly<AppState>} */
 const INITIAL_STATE = Object.freeze({
   status: "loading",
-  heroes: [],
+  heroes: Object.freeze([]),
   field: "name",
   operator: "include",
   query: "",
