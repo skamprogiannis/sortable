@@ -102,9 +102,28 @@ function normalizeValue(rawValue, column) {
     return String(rawValue).trim();
   }
 
-  const numericValue = typeof rawValue === "number" ? rawValue : Number.parseFloat(rawValue);
+  const numericValue = normalizeNumber(rawValue, column);
 
   return Number.isFinite(numericValue) ? numericValue : null;
+}
+
+function normalizeNumber(rawValue, column) {
+  if (typeof rawValue === "number") {
+    return rawValue;
+  }
+
+  const normalizedValue = String(rawValue).trim().replaceAll(",", "");
+  const numericValue = Number.parseFloat(normalizedValue);
+
+  if (column.key === "weight" && normalizedValue.endsWith("tons")) {
+    return numericValue * 1000;
+  }
+
+  if (column.key === "height" && normalizedValue.endsWith("meters")) {
+    return numericValue * 100;
+  }
+
+  return numericValue;
 }
 
 function isMissing(value, column) {

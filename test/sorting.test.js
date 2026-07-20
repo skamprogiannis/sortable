@@ -64,10 +64,42 @@ test("sortHeroes keeps missing metric values last in either direction", () => {
   assert.deepEqual(descending.map((hero) => hero.name), ["Alpha", "Atlas", "zebra", "beta", "Bravo"]);
 });
 
+test("sortHeroes converts metric tons to kilograms", () => {
+  const weightedHeroes = [
+    { name: "Two Tons", appearance: { weight: ["", "2 tons"] } },
+    { name: "Fourteen Kilograms", appearance: { weight: ["", "14 kg"] } },
+    { name: "Nine Thousand Tons", appearance: { weight: ["", "9,000 tons"] } },
+    { name: "One Hundred Kilograms", appearance: { weight: ["", "100 kg"] } },
+  ];
+
+  const sortedHeroes = sortHeroes(weightedHeroes, { key: "weight", direction: "asc" }, columns);
+
+  assert.deepEqual(sortedHeroes.map((hero) => hero.name), [
+    "Fourteen Kilograms",
+    "One Hundred Kilograms",
+    "Two Tons",
+    "Nine Thousand Tons",
+  ]);
+});
+
 test("sortHeroes parses metric height values numerically", () => {
   const sortedHeroes = sortHeroes(heroes, { key: "height", direction: "desc" }, columns);
 
   assert.deepEqual(sortedHeroes.map((hero) => hero.name), ["Atlas", "Alpha", "zebra", "beta", "Bravo"]);
+});
+
+test("sortHeroes converts metric meters to centimetres", () => {
+  const measuredHeroes = [
+    { name: "Thirty Metres", appearance: { height: ["", "30.5 meters"] } },
+    { name: "Nine Hundred Centimetres", appearance: { height: ["", "975 cm"] } },
+  ];
+
+  const sortedHeroes = sortHeroes(measuredHeroes, { key: "height", direction: "asc" }, columns);
+
+  assert.deepEqual(sortedHeroes.map((hero) => hero.name), [
+    "Nine Hundred Centimetres",
+    "Thirty Metres",
+  ]);
 });
 
 test("sortHeroes sorts text descending while keeping missing values last", () => {
