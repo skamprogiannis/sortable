@@ -32,7 +32,11 @@ export function createTableView({ columns, onSort }) {
 
   function update({ rows, sortState }) {
     for (const [key, cell] of headerCells) {
-      cell.setAttribute("aria-sort", ariaSortFor(sortState, key));
+      if (sortState?.key === key) {
+        cell.setAttribute("aria-sort", ariaSortFor(sortState));
+      } else {
+        cell.removeAttribute("aria-sort");
+      }
     }
 
     if (rows.length === 0) {
@@ -46,11 +50,7 @@ export function createTableView({ columns, onSort }) {
   return { element: table, update };
 }
 
-function ariaSortFor(sortState, columnKey) {
-  if (!sortState || sortState.key !== columnKey) {
-    return "none";
-  }
-
+function ariaSortFor(sortState) {
   return sortState.direction === "desc" ? "descending" : "ascending";
 }
 

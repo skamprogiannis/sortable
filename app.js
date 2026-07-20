@@ -1,5 +1,14 @@
-import { INITIAL_STATE } from "./state.js";
+import { applyPage, applyPageSize, applySearch, INITIAL_STATE } from "./state.js";
 import { loadHeroes } from "./data.js";
+import { COLUMNS } from "./src/columns.js";
+import {
+  createPageSizeControl,
+  createPagerControl,
+  createSearchControl,
+} from "./src/controls.js";
+import { filterHeroes } from "./src/filtering.js";
+import { paginateHeroes } from "./src/pagination.js";
+import { createTableView } from "./src/table.js";
 
 let state = INITIAL_STATE;
 const appElement = document.querySelector("#app");
@@ -17,7 +26,7 @@ async function initApp() {
   }
 
   state = { ...state, status: "ready", heroes };
-  renderApp(heroes);
+  renderApp();
 }
 
 function renderError() {
@@ -28,12 +37,65 @@ function renderError() {
   loadingElement.replaceChildren(message);
 }
 
-function renderApp(heroes) {
+function renderApp() {
   appElement.setAttribute("aria-busy", "false");
+  let pageCount = 1;
 
-  const readyStatus = document.createElement("p");
-  readyStatus.textContent = `${heroes.length} heroes loaded.`;
-  loadingElement.replaceChildren(readyStatus);
+  const searchControl = createSearchControl({
+    onSearch(query) {
+      state = applySearch(state, query);
+      renderList();
+    },
+  });
+  const pageSizeControl = createPageSizeControl({
+    onPageSizeChange(pageSize) {
+      state = applyPageSize(state, pageSize);
+      renderList();
+    },
+  });
+  const pagerControl = createPagerControl({
+    onPageChange(page) {
+      state = applyPage(state, page, pageCount);
+      renderList();
+    },
+  });
+  const tableView = createTableView({
+    columns: COLUMNS,
+    onSort() {},
+  });
+
+  const controls = document.createElement("section");
+  controls.setAttribute("aria-label", "Hero table controls");
+  controls.append(searchControl.element, pageSizeControl.element);
+  appElement.replaceChildren(controls, tableView.element, pagerControl.element);
+
+  function derivePageView() {
+    const filteredHeroes = filterHeroes(state.heroes, { query: state.query });
+    return paginateHeroes(filteredHeroes, {
+      page: state.page,
+      pageSize: state.pageSize,
+    });
+  }
+
+  function renderList() {
+    const pageView = derivePageView();
+    pageCount = pageView.pageCount;
+    if (pageView.page !== state.page) {
+      state = { ...state, page: pageView.page };
+    }
+
+    const sortState = {
+      key: state.sortKey,
+      direction: state.sortDirection,
+    };
+
+    searchControl.update(state.query);
+    pageSizeControl.update(state.pageSize);
+    tableView.update({ rows: pageView.rows, sortState });
+    pagerControl.update(pageView);
+  }
+
+  renderList();
 }
 
 initApp();

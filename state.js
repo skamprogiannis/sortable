@@ -1,3 +1,5 @@
+import { PAGE_SIZES } from "./src/pagination.js";
+
 /**
  * @typedef {object} AppState
  * @property {"loading"|"ready"|"error"} status
@@ -26,4 +28,46 @@ const INITIAL_STATE = Object.freeze({
   selectedHeroId: null,
 });
 
-export { INITIAL_STATE };
+/**
+ * Returns the next state after typing in the search box.
+ *
+ * @param {AppState} currentState
+ * @param {string} query
+ * @returns {AppState}
+ */
+function applySearch(currentState, query) {
+  return { ...currentState, query, page: 1 };
+}
+
+/**
+ * Returns the next state after selecting a supported page size.
+ *
+ * @param {AppState} currentState
+ * @param {10|20|50|100|"all"} pageSize
+ * @returns {AppState}
+ */
+function applyPageSize(currentState, pageSize) {
+  if (!PAGE_SIZES.includes(pageSize)) {
+    return { ...currentState };
+  }
+
+  return { ...currentState, pageSize, page: 1 };
+}
+
+/**
+ * Returns the next state for a valid client-side page.
+ *
+ * @param {AppState} currentState
+ * @param {number} page
+ * @param {number} pageCount
+ * @returns {AppState}
+ */
+function applyPage(currentState, page, pageCount) {
+  if (!Number.isInteger(page) || page < 1 || page > pageCount) {
+    return { ...currentState };
+  }
+
+  return { ...currentState, page };
+}
+
+export { applyPage, applyPageSize, applySearch, INITIAL_STATE };
