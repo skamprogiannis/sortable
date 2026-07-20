@@ -83,6 +83,10 @@ const COLUMNS = Object.freeze([
     label: "Alignment",
     kind: "text",
     read: (hero) => hero.biography?.alignment,
+    format: (hero) => {
+      const alignment = hero.biography?.alignment ?? "";
+      return alignment.charAt(0).toUpperCase() + alignment.slice(1);
+    },
   },
 ]);
 
