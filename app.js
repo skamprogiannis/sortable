@@ -8,6 +8,7 @@ import {
 } from "./src/controls.js";
 import { filterHeroes } from "./src/filtering.js";
 import { paginateHeroes } from "./src/pagination.js";
+import { nextSortState, sortHeroes } from "./src/sorting.js";
 import { createTableView } from "./src/table.js";
 
 let state = INITIAL_STATE;
@@ -61,7 +62,15 @@ function renderApp() {
   });
   const tableView = createTableView({
     columns: COLUMNS,
-    onSort() {},
+    onSort(columnKey) {
+      const nextState = nextSortState(readSortState(), columnKey);
+      state = {
+        ...state,
+        sortKey: nextState.key,
+        sortDirection: nextState.direction,
+      };
+      renderList();
+    },
   });
 
   const controls = document.createElement("section");
@@ -71,10 +80,18 @@ function renderApp() {
 
   function derivePageView() {
     const filteredHeroes = filterHeroes(state.heroes, { query: state.query });
-    return paginateHeroes(filteredHeroes, {
+    const sortedHeroes = sortHeroes(filteredHeroes, readSortState(), COLUMNS);
+    return paginateHeroes(sortedHeroes, {
       page: state.page,
       pageSize: state.pageSize,
     });
+  }
+
+  function readSortState() {
+    return {
+      key: state.sortKey,
+      direction: state.sortDirection,
+    };
   }
 
   function renderList() {
@@ -84,14 +101,9 @@ function renderApp() {
       state = { ...state, page: pageView.page };
     }
 
-    const sortState = {
-      key: state.sortKey,
-      direction: state.sortDirection,
-    };
-
     searchControl.update(state.query);
     pageSizeControl.update(state.pageSize);
-    tableView.update({ rows: pageView.rows, sortState });
+    tableView.update({ rows: pageView.rows, sortState: readSortState() });
     pagerControl.update(pageView);
   }
 

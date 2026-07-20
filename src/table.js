@@ -1,3 +1,5 @@
+import { getAriaSort } from "./sorting.js";
+
 /**
  * Creates the hero table view. Rows arrive already filtered, sorted,
  * and paginated; activating a heading only reports the column key
@@ -33,7 +35,7 @@ export function createTableView({ columns, onSort }) {
   function update({ rows, sortState }) {
     for (const [key, cell] of headerCells) {
       if (sortState?.key === key) {
-        cell.setAttribute("aria-sort", ariaSortFor(sortState));
+        cell.setAttribute("aria-sort", getAriaSort(sortState, key));
       } else {
         cell.removeAttribute("aria-sort");
       }
@@ -48,10 +50,6 @@ export function createTableView({ columns, onSort }) {
   }
 
   return { element: table, update };
-}
-
-function ariaSortFor(sortState) {
-  return sortState.direction === "desc" ? "descending" : "ascending";
 }
 
 function createRow(hero, columns) {
