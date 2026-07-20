@@ -2,7 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { filterHeroes } from "../src/filtering.js";
-import { searchHeroes } from "./fixtures/list-heroes.js";
+
+const searchHeroes = [
+  { id: 1, name: "Batman" },
+  { id: 2, name: "Catwoman" },
+  { id: 3, name: "Black Cat" },
+  { id: 4, name: "Iron Man" },
+  { id: 5, name: "Thor" },
+];
 
 test("entering Cat includes Catwoman", () => {
   const names = filterHeroes(searchHeroes, { query: "Cat" }).map((hero) => hero.name);

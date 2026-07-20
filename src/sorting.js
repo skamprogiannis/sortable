@@ -5,7 +5,7 @@
  * @param {string} columnKey
  * @returns {{ key: string, direction: "asc" | "desc" }}
  */
-export function nextSortState(currentSortState, columnKey) {
+function nextSortState(currentSortState, columnKey) {
   if (currentSortState.key !== columnKey) {
     return { key: columnKey, direction: "asc" };
   }
@@ -23,7 +23,7 @@ export function nextSortState(currentSortState, columnKey) {
  * @param {string} columnKey
  * @returns {"ascending" | "descending" | "none"}
  */
-export function getAriaSort(sortState, columnKey) {
+function getAriaSort(sortState, columnKey) {
   if (sortState.key !== columnKey) {
     return "none";
   }
@@ -39,7 +39,7 @@ export function getAriaSort(sortState, columnKey) {
  * @param {{ key: string, kind: "image" | "number" | "text", read: (hero: object) => unknown }[]} columns
  * @returns {object[]}
  */
-export function sortHeroes(heroes, sortState, columns) {
+function sortHeroes(heroes, sortState, columns) {
   const column = columns.find(({ key }) => key === sortState.key);
   const nameColumn = columns.find(({ key }) => key === "name");
 
@@ -154,3 +154,5 @@ function compareText(firstValue, secondValue) {
   // Ignore case so names such as "Alpha" and "alpha" sort together naturally.
   return String(firstValue).localeCompare(String(secondValue), undefined, { sensitivity: "base" });
 }
+
+export { getAriaSort, nextSortState, sortHeroes };

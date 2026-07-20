@@ -2,7 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { paginateHeroes } from "../src/pagination.js";
-import { pagedHeroes } from "./fixtures/list-heroes.js";
+
+const pagedHeroes = Array.from({ length: 25 }, (_, index) => ({
+  id: index + 1,
+  name: `Hero ${String(index + 1).padStart(2, "0")}`,
+}));
 
 test("returns the requested page with metadata", () => {
   const view = paginateHeroes(pagedHeroes, { page: 2, pageSize: 10 });

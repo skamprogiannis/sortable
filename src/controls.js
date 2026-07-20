@@ -7,7 +7,7 @@ import { PAGE_SIZES } from "./pagination.js";
  * @param {{ onSearch: (query: string) => void }} options
  * @returns {{ element: HTMLElement, update: (query: string) => void }}
  */
-export function createSearchControl({ onSearch }) {
+function createSearchControl({ onSearch }) {
   const container = document.createElement("div");
   container.className = "search-control";
 
@@ -38,7 +38,7 @@ export function createSearchControl({ onSearch }) {
  * @param {{ onPageSizeChange: (pageSize: 10|20|50|100|"all") => void }} options
  * @returns {{ element: HTMLElement, update: (pageSize: 10|20|50|100|"all") => void }}
  */
-export function createPageSizeControl({ onPageSizeChange }) {
+function createPageSizeControl({ onPageSizeChange }) {
   const container = document.createElement("div");
   container.className = "page-size-control";
 
@@ -77,7 +77,7 @@ export function createPageSizeControl({ onPageSizeChange }) {
  * @param {{ onPageChange: (page: number) => void }} options
  * @returns {{ element: HTMLElement, update: (view: { page: number, pageCount: number, totalCount: number }) => void }}
  */
-export function createPagerControl({ onPageChange }) {
+function createPagerControl({ onPageChange }) {
   let currentPage = 1;
 
   const container = document.createElement("div");
@@ -110,3 +110,5 @@ export function createPagerControl({ onPageChange }) {
     },
   };
 }
+
+export { createPageSizeControl, createPagerControl, createSearchControl };

@@ -5,8 +5,8 @@
 This issue owns pure sorting behaviour and sort-state transitions. It does not
 fetch data, render table rows, paginate results, or mutate application state.
 
-The module will accept hero records and column descriptors, then return a new
-sorted array. The application shell will later own rendering and state updates.
+The module accepts hero records and column descriptors, then returns a new
+sorted array. The application shell owns rendering and state updates.
 
 ## Completion checklist
 
@@ -71,6 +71,6 @@ sorted array. The application shell will later own rendering and state updates.
 
 ## Definition of done
 
-All issue #3 acceptance criteria in `issues.md` pass through automated tests,
+All Gitea issue #3 acceptance criteria pass through automated tests,
 the module preserves its inputs, and the integration team can wire it into the
 table without sorting logic in the renderer.

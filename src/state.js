@@ -1,4 +1,4 @@
-import { PAGE_SIZES } from "./src/pagination.js";
+import { PAGE_SIZES } from "./pagination.js";
 
 /**
  * @typedef {object} AppState

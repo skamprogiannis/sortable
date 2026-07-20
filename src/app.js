@@ -1,15 +1,15 @@
 import { applyPage, applyPageSize, applySearch, INITIAL_STATE } from "./state.js";
 import { loadHeroes } from "./data.js";
-import { COLUMNS } from "./src/columns.js";
+import { COLUMNS } from "./columns.js";
 import {
   createPageSizeControl,
   createPagerControl,
   createSearchControl,
-} from "./src/controls.js";
-import { filterHeroes } from "./src/filtering.js";
-import { paginateHeroes } from "./src/pagination.js";
-import { nextSortState, sortHeroes } from "./src/sorting.js";
-import { createTableView } from "./src/table.js";
+} from "./controls.js";
+import { filterHeroes } from "./filtering.js";
+import { paginateHeroes } from "./pagination.js";
+import { nextSortState, sortHeroes } from "./sorting.js";
+import { createTableView } from "./table.js";
 
 let state = INITIAL_STATE;
 const appElement = document.querySelector("#app");

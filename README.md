@@ -26,6 +26,16 @@ Then open <http://localhost:8000/>.
 
 Stop the server with `Ctrl+C`.
 
+## Test
+
+Run the native JavaScript test suite from the repository root:
+
+```bash
+npm test
+```
+
+No dependency installation or build step is required.
+
 ## Verify
 
 Check that the local server returns the application:
@@ -37,7 +47,7 @@ curl --fail --head http://localhost:8000/
 Then verify in the browser:
 
 1. The loading indicator appears and resolves successfully.
-2. The application reports that 563 heroes loaded.
+2. The pager reports `Page 1 of 29 (563 heroes)`.
 3. DevTools Network shows exactly one request to `all.json`.
 4. Blocking the `all.json` request and reloading displays a clear error.
 5. The detailed failure remains available in the browser console.
@@ -46,3 +56,5 @@ Then verify in the browser:
 
 - [Product requirements](docs/PRD.md)
 - [Architecture](docs/architecture.md)
+- [Issue #2 implementation plan](docs/issue-2-tasks.md)
+- [Issue #3 sorting plan](docs/issue-3-tasks.md)

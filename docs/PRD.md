@@ -87,8 +87,8 @@ Build a static, framework-free web application that fetches the official dataset
 
 ## Testing Decisions
 
-- Test data behavior primarily through the public `deriveTableView(heroes, state)` seam rather than testing private helpers or DOM implementation details.
-- Use small deterministic fixtures for parallel module development and the official dataset for integration and audit checks.
+- Test data behavior through the public filtering, sorting, pagination, and state-transition contracts rather than private helpers or DOM implementation details.
+- Keep small deterministic data alongside the tests that consume it and use the official dataset for integration and audit checks.
 - Verify the complete user flow in a clean browser using the 22-question audit checklist in Gitea issue #7.
 - Explicitly cover `Cat`, weight ascending, birthplace descending, missing values in both directions, every page size, copied URLs, and hero URL restoration.
 - Record browser Network and Performance evidence for the one-fetch and responsiveness requirements.

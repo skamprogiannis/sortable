@@ -8,7 +8,7 @@ import { getAriaSort } from "./sorting.js";
  * @param {{ columns: object[], onSort: (key: string) => void }} options
  * @returns {{ element: HTMLTableElement, update: (view: { rows: object[], sortState: { key: string, direction: "asc"|"desc" } }) => void }}
  */
-export function createTableView({ columns, onSort }) {
+function createTableView({ columns, onSort }) {
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
@@ -101,3 +101,5 @@ function createEmptyRow(columnCount) {
 
   return row;
 }
+
+export { createTableView };

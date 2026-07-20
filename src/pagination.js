@@ -3,14 +3,14 @@ const DEFAULT_PAGE_SIZE = 20;
 
 /**
  * Returns the rows visible on the requested page plus page metadata.
- * Out-of-range or invalid page numbers resolve to the nearest valid
- * page, and unsupported page sizes fall back to the default.
+ * Invalid page numbers resolve to page 1, pages beyond the end resolve
+ * to the last page, and unsupported page sizes fall back to the default.
  *
  * @param {ReadonlyArray<object>} heroes
  * @param {{ page: number, pageSize: 10|20|50|100|"all" }} pageState
  * @returns {{ rows: object[], page: number, pageCount: number, totalCount: number }}
  */
-export function paginateHeroes(heroes, { page, pageSize }) {
+function paginateHeroes(heroes, { page, pageSize }) {
   const totalCount = heroes.length;
   const size = resolvePageSize(pageSize, totalCount);
   const pageCount = Math.max(1, Math.ceil(totalCount / size));
@@ -41,4 +41,4 @@ function resolvePage(page, pageCount) {
   return Math.min(page, pageCount);
 }
 
-export { PAGE_SIZES, DEFAULT_PAGE_SIZE };
+export { DEFAULT_PAGE_SIZE, PAGE_SIZES, paginateHeroes };

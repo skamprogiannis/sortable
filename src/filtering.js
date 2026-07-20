@@ -6,8 +6,10 @@
  * @param {{ query: string }} filterState
  * @returns {object[]}
  */
-export function filterHeroes(heroes, { query }) {
+function filterHeroes(heroes, { query }) {
   const needle = (query ?? "").toLowerCase();
 
   return heroes.filter((hero) => (hero.name ?? "").toLowerCase().includes(needle));
 }
+
+export { filterHeroes };

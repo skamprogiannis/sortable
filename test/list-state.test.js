@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { applyPage, applyPageSize, applySearch } from "../state.js";
+import { applyPage, applyPageSize, applySearch } from "../src/state.js";
 
 const listState = Object.freeze({ query: "", page: 4, pageSize: 20 });
 

@@ -12,9 +12,8 @@ only full-page render loop.
 
 ## Completion checklist
 
-- [x] Reuse the module location (`src/`), native test runner
-  (`node --test test/*.test.js`), and fixture conventions established by
-  issue #3.
+- [x] Reuse the module location (`src/`) and native test runner
+  (`node --test test/*.test.js`) established by issue #3.
 - [x] Define the public contracts:
   - `filterHeroes(heroes, { query })` returns matching heroes without
     mutating the source.
@@ -26,8 +25,8 @@ only full-page render loop.
     reports heading activations; it never sorts.
   - `createSearchControl`, `createPageSizeControl`, and
     `createPagerControl` emit user intent through callbacks only.
-- [x] Create deterministic fixtures for search names and pagination
-  boundaries in `test/fixtures/list-heroes.js`.
+- [x] Define deterministic search and pagination data alongside the tests
+  that consume it.
 
 ## Write failing tests first
 
@@ -58,12 +57,12 @@ only full-page render loop.
 ## Verify and hand off
 
 - [x] Run the complete test suite and ensure every test passes.
-- [ ] Manually verify search, every page size, page navigation, and the
+- [x] Manually verify search, every page size, page navigation, and the
   empty state in a served browser session with the official dataset.
-- [ ] Commit only issue #2 implementation and tests.
-- [ ] Share the module APIs with the issue #1 owner for integration and
+- [x] Commit only issue #2 implementation and tests.
+- [x] Share the module APIs with the issue #1 owner for integration and
   confirm the `aria-sort` values match the issue #3 contract.
-- [ ] After integration, verify the table, pagination, and search entries
+- [x] After integration, verify the table, pagination, and search entries
   in shared issue #7 in a browser.
 
 ## Definition of done

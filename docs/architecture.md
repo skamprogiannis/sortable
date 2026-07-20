@@ -57,10 +57,10 @@ A shared ordered descriptor list is the single source of truth for the table. Ea
 - A human-readable `label` used by the header.
 - A `kind` of image, text, or number.
 - A reader that extracts the raw value from a hero.
-- A formatter that produces the displayed value.
-- A missing-value predicate.
+- An optional formatter for values that need custom display text.
+- An optional missing-value predicate for column-specific sentinels.
 
-The descriptor order is Icon, Name, Full Name, Intelligence, Strength, Speed, Durability, Power, Combat, Race, Gender, Height, Weight, Place of Birth, and Alignment. Icon sorting uses its source URL; Height and Weight expose metric numeric values for comparison.
+The descriptor order is Icon, Name, Full Name, Intelligence, Strength, Speed, Durability, Power, Combat, Race, Gender, Height, Weight, Place of Birth, and Alignment. Icon sorting uses its source URL; Height and Weight read the metric display values that sorting normalizes for numeric comparison.
 
 ### Data functions
 
@@ -69,8 +69,7 @@ The descriptor order is Icon, Name, Full Name, Intelligence, Strength, Speed, Du
 | `loadHeroes()` | Fetch and validate the official array once. |
 | `filterHeroes(heroes, filterState)` | Return records matching core or advanced search. |
 | `sortHeroes(heroes, sortState, columns)` | Return a sorted copy using descriptor semantics. |
-| `paginateHeroes(heroes, pageState)` | Return current items and page metadata. |
-| `deriveTableView(heroes, state)` | Compose filter, sort, and pagination; this is the primary test seam. |
+| `paginateHeroes(heroes, pageState)` | Return current rows and page metadata. |
 | `stateFromUrl(searchParams)` | Parse and validate restorable URL state. |
 | `stateToUrl(state)` | Serialize shareable list/detail state. |
 
@@ -88,7 +87,7 @@ The first three Gitea issues can start at the same time because this document fr
 
 Parallel development rules:
 
-1. Each workstream develops against a small shared hero fixture that follows the official API shape.
+1. Each workstream develops against small deterministic hero data that follows the official API shape.
 2. The table renderer accepts rows, column descriptors, sort state, and an `onSort(key)` callback; it does not sort rows itself.
 3. The sorting workstream returns sorted records and next-sort state without touching the DOM.
 4. The application workstream wires modules together and owns the only full-page render loop.
@@ -140,6 +139,6 @@ Opening details adds or replaces only `hero`. Closing details removes only `hero
 
 ## Verification Strategy
 
-The highest automated seam is `deriveTableView(heroes, state)`. Deterministic fixtures should cover filtering, sorting, missing values, numeric normalization, pagination boundaries, and immutable source data through this contract. URL parsing/serialization is tested as a round trip.
+Pure filtering, sorting, pagination, and state transitions are the primary automated seams. Deterministic test data covers missing values, numeric normalization, pagination boundaries, and immutable source data. Browser verification covers their composition in filter, sort, paginate, render order. URL parsing/serialization is tested as a round trip.
 
 Browser verification covers semantic table output, control wiring, keyboard behavior, responsive details, network request count, performance, and the complete Zone01 audit. Each team member cross-reviews a workstream they did not implement before issue #7 is closed.
