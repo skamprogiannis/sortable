@@ -108,3 +108,55 @@ test("advanced text search does not mutate the source array", () => {
 
   assert.deepEqual(searchHeroes.map((hero) => hero.name), sourceNames);
 });
+
+const numericColumns = [
+  { key: "strength", kind: "number", read: (hero) => hero.strength },
+  { key: "weight", kind: "number", read: (hero) => hero.weight },
+];
+
+const numericHeroes = [
+  { name: "A", strength: 100, weight: "2 tons" },
+  { name: "B", strength: 50, weight: "80 kg" },
+  { name: "C", strength: 90, weight: "-" },
+  { name: "D", strength: null, weight: "0 kg" },
+  { name: "E", strength: "-", weight: "120 kg" },
+];
+
+function numericSearch(field, operator, query) {
+  return filterHeroes(numericHeroes, { field, operator, query }, numericColumns).map(
+    (hero) => hero.name,
+  );
+}
+
+test("greater-than keeps values above the threshold", () => {
+  assert.deepEqual(numericSearch("strength", "greater-than", "80"), ["A", "C"]);
+});
+
+test("less-than keeps values below the threshold", () => {
+  assert.deepEqual(numericSearch("strength", "less-than", "60"), ["B"]);
+});
+
+test("equal and not-equal compare against the exact value", () => {
+  assert.deepEqual(numericSearch("strength", "equal", "90"), ["C"]);
+  assert.deepEqual(numericSearch("strength", "not-equal", "100"), ["B", "C"]);
+});
+
+test("missing numeric values never satisfy any comparison", () => {
+  assert.deepEqual(numericSearch("strength", "greater-than", "0"), ["A", "B", "C"]);
+  assert.deepEqual(numericSearch("strength", "not-equal", "999"), ["A", "B", "C"]);
+});
+
+test("numeric filtering uses the shared normalization for unit variants", () => {
+  assert.deepEqual(numericSearch("weight", "greater-than", "1000"), ["A"]);
+});
+
+test("a non-numeric query on a numeric field keeps every hero", () => {
+  const result = filterHeroes(
+    numericHeroes,
+    { field: "strength", operator: "greater-than", query: "strong" },
+    numericColumns,
+  );
+
+  assert.deepEqual(result, numericHeroes);
+  assert.notStrictEqual(result, numericHeroes);
+});

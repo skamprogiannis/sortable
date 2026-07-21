@@ -1,9 +1,17 @@
 import { COLUMNS } from "./columns.js";
+import { normalizeValue } from "./normalize.js";
 
 const TEXT_MATCHERS = {
   include: (value, needle) => value.includes(needle),
   exclude: (value, needle) => !value.includes(needle),
   fuzzy: (value, needle) => isSubsequence(needle, value),
+};
+
+const NUMBER_MATCHERS = {
+  "equal": (value, threshold) => value === threshold,
+  "not-equal": (value, threshold) => value !== threshold,
+  "greater-than": (value, threshold) => value > threshold,
+  "less-than": (value, threshold) => value < threshold,
 };
 
 /**
@@ -30,7 +38,7 @@ function filterHeroes(heroes, { field = "name", operator = "include", query = ""
   }
 
   if (column.kind === "number") {
-    return [...heroes]; // Numeric operators are added in the next increment.
+    return filterByNumber(heroes, column, operator, needle);
   }
 
   return filterByText(heroes, column, operator, needle.toLowerCase());
@@ -42,6 +50,23 @@ function filterByText(heroes, column, operator, needle) {
   return heroes.filter((hero) =>
     match(String(column.read(hero) ?? "").toLowerCase(), needle),
   );
+}
+
+function filterByNumber(heroes, column, operator, needle) {
+  const threshold = Number(needle);
+
+  if (!Number.isFinite(threshold)) {
+    return [...heroes]; // A non-numeric query is treated as no constraint.
+  }
+
+  const match = NUMBER_MATCHERS[operator] ?? NUMBER_MATCHERS.equal;
+
+  return heroes.filter((hero) => {
+    const value = normalizeValue(column.read(hero), column);
+
+    // Missing values never satisfy a numeric comparison.
+    return value !== null && match(value, threshold);
+  });
 }
 
 function isSubsequence(needle, value) {
