@@ -1,3 +1,5 @@
+import { normalizeValue } from "./normalize.js";
+
 /**
  * Returns the next sort state after a table heading is activated.
  *
@@ -90,59 +92,6 @@ function comparePresentValues(column, firstValue, secondValue) {
   }
 
   return compareText(firstValue, secondValue);
-}
-
-function normalizeValue(rawValue, column) {
-  // Convert each raw API value into a comparable value, or the shared missing marker.
-  if (isMissing(rawValue, column)) {
-    return null;
-  }
-
-  if (column.kind !== "number") {
-    return String(rawValue).trim();
-  }
-
-  const numericValue = normalizeNumber(rawValue, column);
-
-  return Number.isFinite(numericValue) ? numericValue : null;
-}
-
-function normalizeNumber(rawValue, column) {
-  if (typeof rawValue === "number") {
-    return rawValue;
-  }
-
-  const normalizedValue = String(rawValue).trim().replaceAll(",", "");
-  const numericValue = Number.parseFloat(normalizedValue);
-
-  if (column.key === "weight" && normalizedValue.endsWith("tons")) {
-    return numericValue * 1000;
-  }
-
-  if (column.key === "height" && normalizedValue.endsWith("meters")) {
-    return numericValue * 100;
-  }
-
-  return numericValue;
-}
-
-function isMissing(value, column) {
-  // Columns may define extra missing cases, while common API placeholders work everywhere.
-  if (column.isMissing?.(value)) {
-    return true;
-  }
-
-  if (value === null || value === undefined) {
-    return true;
-  }
-
-  if (typeof value !== "string") {
-    return false;
-  }
-
-  const normalizedValue = value.trim().toLowerCase();
-
-  return normalizedValue === "" || normalizedValue === "-" || normalizedValue === "0 cm" || normalizedValue === "0 kg";
 }
 
 function readName(hero, nameColumn) {
