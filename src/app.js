@@ -1,15 +1,17 @@
-import { applyPage, applyPageSize, applySearch, INITIAL_STATE } from "./state.js";
+import { applyPage, applyPageSize, INITIAL_STATE } from "./state.js";
 import { loadHeroes } from "./data.js";
 import { COLUMNS } from "./columns.js";
 import {
+  createAdvancedSearchControl,
   createPageSizeControl,
   createPagerControl,
-  createSearchControl,
 } from "./controls.js";
 import { filterHeroes } from "./filtering.js";
 import { paginateHeroes } from "./pagination.js";
+import { searchableFields } from "./search-fields.js";
 import { nextSortState, sortHeroes } from "./sorting.js";
 import { createTableView } from "./table.js";
+import { stateFromUrl, stateToUrl } from "./url-state.js";
 
 let state = INITIAL_STATE;
 const appElement = document.querySelector("#app");
@@ -26,7 +28,12 @@ async function initApp() {
     return;
   }
 
-  state = { ...state, status: "ready", heroes };
+  state = {
+    ...state,
+    status: "ready",
+    heroes,
+    ...stateFromUrl(new URLSearchParams(window.location.search)),
+  };
   renderApp();
 }
 
@@ -42,9 +49,10 @@ function renderApp() {
   appElement.setAttribute("aria-busy", "false");
   let pageCount = 1;
 
-  const searchControl = createSearchControl({
-    onSearch(query) {
-      state = applySearch(state, query);
+  const searchControl = createAdvancedSearchControl({
+    fields: searchableFields(COLUMNS),
+    onSearch({ field, operator, query }) {
+      state = { ...state, field, operator, query, page: 1 };
       renderList();
     },
   });
@@ -79,7 +87,11 @@ function renderApp() {
   appElement.replaceChildren(controls, tableView.element, pagerControl.element);
 
   function derivePageView() {
-    const filteredHeroes = filterHeroes(state.heroes, { query: state.query });
+    const filteredHeroes = filterHeroes(
+      state.heroes,
+      { field: state.field, operator: state.operator, query: state.query },
+      COLUMNS,
+    );
     const sortedHeroes = sortHeroes(filteredHeroes, readSortState(), COLUMNS);
     return paginateHeroes(sortedHeroes, {
       page: state.page,
@@ -101,10 +113,22 @@ function renderApp() {
       state = { ...state, page: pageView.page };
     }
 
-    searchControl.update(state.query);
+    searchControl.update({
+      field: state.field,
+      operator: state.operator,
+      query: state.query,
+    });
     pageSizeControl.update(state.pageSize);
     tableView.update({ rows: pageView.rows, sortState: readSortState() });
     pagerControl.update(pageView);
+    syncUrl();
+  }
+
+  // Reflect the normalized/clamped state in the URL without navigating.
+  function syncUrl() {
+    const query = stateToUrl(state).toString();
+    const url = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
   }
 
   renderList();
