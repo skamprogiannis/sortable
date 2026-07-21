@@ -55,3 +55,56 @@ test("does not mutate the source array", () => {
 
   assert.deepEqual(searchHeroes.map((hero) => hero.name), sourceNames);
 });
+
+const textColumns = [
+  { key: "name", label: "Name", kind: "text", read: (hero) => hero.name },
+];
+
+test("the exclude operator keeps heroes that do not contain the query", () => {
+  const names = filterHeroes(
+    searchHeroes,
+    { field: "name", operator: "exclude", query: "man" },
+    textColumns,
+  ).map((hero) => hero.name);
+
+  assert.deepEqual(names, ["Black Cat", "Thor"]);
+});
+
+test("the fuzzy operator matches an ordered subsequence, not just a substring", () => {
+  const names = filterHeroes(
+    searchHeroes,
+    { field: "name", operator: "fuzzy", query: "cn" },
+    textColumns,
+  ).map((hero) => hero.name);
+
+  assert.deepEqual(names, ["Catwoman"]);
+});
+
+test("fuzzy matching ignores case in both directions", () => {
+  const names = filterHeroes(
+    searchHeroes,
+    { field: "name", operator: "fuzzy", query: "BM" },
+    textColumns,
+  ).map((hero) => hero.name);
+
+  assert.deepEqual(names, ["Batman"]);
+});
+
+test("an unknown search field keeps every hero", () => {
+  const result = filterHeroes(
+    searchHeroes,
+    { field: "nope", operator: "include", query: "cat" },
+    textColumns,
+  );
+
+  assert.deepEqual(result, searchHeroes);
+  assert.notStrictEqual(result, searchHeroes);
+});
+
+test("advanced text search does not mutate the source array", () => {
+  const sourceNames = searchHeroes.map((hero) => hero.name);
+
+  filterHeroes(searchHeroes, { field: "name", operator: "exclude", query: "man" }, textColumns);
+
+  assert.deepEqual(searchHeroes.map((hero) => hero.name), sourceNames);
+});
