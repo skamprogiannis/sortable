@@ -1,5 +1,51 @@
+:root {
+  color: #1c2330;
+  background: #f3f6fb;
+  font-family: Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select,
+input {
+  border: 1px solid #9aa8ba;
+  border-radius: 0.35rem;
+}
+
+button {
+  cursor: pointer;
+  background: #ffffff;
+  color: inherit;
+}
+
+button:hover:not(:disabled) {
+  background: #e5edf9;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.hero-row:focus-visible {
+  outline: 3px solid #0d6efd;
+  outline-offset: 2px;
 }
 
 #loading {
@@ -9,4 +55,257 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+#app {
+  width: min(100% - 2rem, 90rem);
+  margin: 0 auto;
+  padding: 1.5rem 0 2.5rem;
+  overflow-x: auto;
+}
+
+#app > section[aria-label="Hero table controls"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #d4dce8;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.search-control,
+.page-size-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.search-control input,
+.search-control select,
+.page-size-control select {
+  min-height: 2.35rem;
+  padding: 0.35rem 0.5rem;
+  background: #ffffff;
+}
+
+.search-control input {
+  min-width: 13rem;
+}
+
+table {
+  width: 100%;
+  min-width: 70rem;
+  border-collapse: collapse;
+  background: #ffffff;
+  box-shadow: 0 0.15rem 0.5rem rgb(28 35 48 / 10%);
+}
+
+th,
+td {
+  padding: 0.7rem;
+  border-bottom: 1px solid #dce3ed;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: #1d3557;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+th button {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: bold;
+  text-align: left;
+}
+
+th button:hover:not(:disabled) {
+  background: transparent;
+  text-decoration: underline;
+}
+
+.hero-row {
+  cursor: pointer;
+}
+
+.hero-row:nth-child(even) {
+  background: #f7f9fc;
+}
+
+.hero-row:hover {
+  background: #e8f1ff;
+}
+
+.hero-icon {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.empty-state {
+  padding: 2rem;
+  color: #596579;
+  text-align: center;
+}
+
+.pager-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pager-control button,
+.detail-close {
+  min-height: 2.35rem;
+  padding: 0.4rem 0.75rem;
+}
+
+.hero-details {
+  width: min(100% - 2rem, 56rem);
+  max-height: calc(100vh - 2rem);
+  padding: 0;
+  border: 0;
+  border-radius: 0.6rem;
+  color: #1c2330;
+  background: #ffffff;
+  box-shadow: 0 1rem 3rem rgb(0 0 0 / 30%);
+}
+
+.hero-details::backdrop {
+  background: rgb(15 23 42 / 70%);
+}
+
+.hero-details article {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.25rem;
+}
+
+.hero-details header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hero-details h2,
+.hero-details h3 {
+  margin: 0;
+}
+
+.detail-close {
+  flex: none;
+  background: #1d3557;
+  color: #ffffff;
+}
+
+.detail-close:hover:not(:disabled) {
+  background: #274a78;
+}
+
+.hero-detail-image {
+  display: block;
+  width: min(100%, 24rem);
+  max-height: 28rem;
+  margin: 0 auto 1.5rem;
+  border-radius: 0.5rem;
+  object-fit: contain;
+}
+
+.detail-image-fallback {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: #596579;
+  background: #edf1f7;
+  text-align: center;
+}
+
+.detail-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dce3ed;
+}
+
+.detail-section dl {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0.75rem 0 0;
+}
+
+.detail-section dt {
+  font-weight: bold;
+}
+
+.detail-section dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 42rem) {
+  #app {
+    width: min(100% - 1rem, 90rem);
+    padding-top: 0.75rem;
+  }
+
+  #app > section[aria-label="Hero table controls"] {
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .search-control,
+  .page-size-control {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search-control input,
+  .search-control select,
+  .page-size-control select {
+    width: 100%;
+  }
+
+  .pager-control {
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .hero-details article {
+    padding: 1rem;
+  }
+
+  .hero-details header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .detail-section dl {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .detail-section dd {
+    margin-bottom: 0.75rem;
+  }
 }
