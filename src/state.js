@@ -1,4 +1,4 @@
-import { PAGE_SIZES } from "./pagination.js";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "./pagination.js";
 
 /**
  * @typedef {object} AppState
@@ -22,7 +22,7 @@ const INITIAL_STATE = Object.freeze({
   operator: "include",
   query: "",
   page: 1,
-  pageSize: 20,
+  pageSize: DEFAULT_PAGE_SIZE,
   sortKey: "name",
   sortDirection: "asc",
   selectedHeroId: null,
