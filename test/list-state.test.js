@@ -4,13 +4,44 @@ import assert from "node:assert/strict";
 import { applyPage, applyPageSize, applySearch } from "../src/state.js";
 
 const listState = Object.freeze({ query: "", page: 4, pageSize: 20 });
+const searchState = Object.freeze({
+  ...listState,
+  field: "name",
+  operator: "include",
+});
 
-test("searching stores the query and returns to the first page", () => {
-  assert.deepEqual(applySearch(listState, "cat"), {
-    query: "cat",
-    page: 1,
-    pageSize: 20,
-  });
+test("searching stores its field, operator, and query and returns to page 1", () => {
+  assert.deepEqual(
+    applySearch(searchState, {
+      field: "strength",
+      operator: "greater-than",
+      query: "90",
+    }),
+    {
+      query: "90",
+      page: 1,
+      pageSize: 20,
+      field: "strength",
+      operator: "greater-than",
+    },
+  );
+});
+
+test("searching preserves unrelated state", () => {
+  assert.deepEqual(
+    applySearch(
+      { ...searchState, sortKey: "weight" },
+      { field: "name", operator: "fuzzy", query: "btmn" },
+    ),
+    {
+      query: "btmn",
+      page: 1,
+      pageSize: 20,
+      field: "name",
+      operator: "fuzzy",
+      sortKey: "weight",
+    },
+  );
 });
 
 test("changing the page size returns to the first page", () => {
@@ -42,7 +73,14 @@ test("navigation outside the valid range is ignored", () => {
 });
 
 test("transitions return new state objects", () => {
-  assert.notStrictEqual(applySearch(listState, ""), listState);
+  assert.notStrictEqual(
+    applySearch(searchState, {
+      field: "name",
+      operator: "include",
+      query: "",
+    }),
+    searchState,
+  );
   assert.notStrictEqual(applyPageSize(listState, 7), listState);
   assert.notStrictEqual(applyPage(listState, 99, 10), listState);
 });

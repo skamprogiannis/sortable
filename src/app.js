@@ -1,4 +1,9 @@
-import { applyPage, applyPageSize, INITIAL_STATE } from "./state.js";
+import {
+  applyPage,
+  applyPageSize,
+  applySearch,
+  INITIAL_STATE,
+} from "./state.js";
 import { loadHeroes } from "./data.js";
 import { COLUMNS } from "./columns.js";
 import {
@@ -51,8 +56,8 @@ function renderApp() {
 
   const searchControl = createAdvancedSearchControl({
     fields: searchableFields(COLUMNS),
-    onSearch({ field, operator, query }) {
-      state = { ...state, field, operator, query, page: 1 };
+    onSearch(search) {
+      state = applySearch(state, search);
       renderList();
     },
   });

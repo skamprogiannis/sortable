@@ -124,38 +124,6 @@ function createAdvancedSearchControl({ fields, onSearch }) {
 }
 
 /**
- * Creates the Name search box. Every input event reports the raw
- * value through onSearch; state stays with the caller.
- *
- * @param {{ onSearch: (query: string) => void }} options
- * @returns {{ element: HTMLElement, update: (query: string) => void }}
- */
-function createSearchControl({ onSearch }) {
-  const container = document.createElement("div");
-  container.className = "search-control";
-
-  const label = document.createElement("label");
-  label.htmlFor = "hero-search";
-  label.textContent = "Search name";
-
-  const input = document.createElement("input");
-  input.id = "hero-search";
-  input.type = "search";
-  input.addEventListener("input", () => onSearch(input.value));
-
-  container.append(label, input);
-
-  return {
-    element: container,
-    update(query) {
-      if (input.value !== query) {
-        input.value = query;
-      }
-    },
-  };
-}
-
-/**
  * Creates the results-per-page selector.
  *
  * @param {{ onPageSizeChange: (pageSize: 10|20|50|100|"all") => void }} options
@@ -238,5 +206,4 @@ export {
   createAdvancedSearchControl,
   createPageSizeControl,
   createPagerControl,
-  createSearchControl,
 };

@@ -29,14 +29,14 @@ const INITIAL_STATE = Object.freeze({
 });
 
 /**
- * Returns the next state after typing in the search box.
+ * Returns the next state for an active field, operator, and query.
  *
  * @param {AppState} currentState
- * @param {string} query
+ * @param {{ field: string, operator: string, query: string }} search
  * @returns {AppState}
  */
-function applySearch(currentState, query) {
-  return { ...currentState, query, page: 1 };
+function applySearch(currentState, { field, operator, query }) {
+  return { ...currentState, field, operator, query, page: 1 };
 }
 
 /**
