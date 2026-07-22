@@ -90,14 +90,14 @@ then implement the smallest clear change that makes it pass.
 
 ### Phase 1 — Selection state and URL safety
 
-- [ ] Add failing tests for a small pure helper that finds a hero by a positive
+- [x] Add failing tests for a small pure helper that finds a hero by a positive
   ID in the supplied hero array and returns no hero for unknown IDs.
-- [ ] Add failing URL/state tests covering a selected ID and an unknown ID
+- [x] Add failing URL/state tests covering a selected ID and an unknown ID
   normalized after loaded heroes are available.
-- [ ] Implement the smallest pure selection helper in a focused module.
-- [ ] Keep `url-state.js` as the source of syntax validation; do not duplicate
+- [x] Implement the smallest pure selection helper in a focused module.
+- [x] Keep `url-state.js` as the source of syntax validation; do not duplicate
   query-string parsing in the detail module.
-- [ ] Run `npm test` until the new and existing tests pass.
+- [x] Run `npm test` until the new and existing tests pass.
 
 Justification: selection and URL restoration have data rules that can be
 tested without a browser. Keeping them pure makes the later DOM wiring simple
@@ -105,13 +105,13 @@ and prevents duplicate requests or hidden state.
 
 ### Phase 2 — Detail data preparation and rendering
 
-- [ ] Add failing tests for pure detail-data helpers: missing-value display,
+- [x] Add failing tests for pure detail-data helpers: missing-value display,
   section/value preparation, and selecting the large image source.
-- [ ] Implement simple helpers and `src/details.js` with native DOM APIs.
-- [ ] Render every required data group: biography, appearance, powerstats,
+- [x] Implement simple helpers and `src/details.js` with native DOM APIs.
+- [x] Render every required data group: biography, appearance, powerstats,
   work, and connections.
-- [ ] Add a visible close button and large-image error fallback.
-- [ ] Run `npm test` until green.
+- [x] Add a visible close button and large-image error fallback.
+- [x] Run `npm test` until green.
 
 Justification: native Node tests cannot inspect browser DOM without introducing
 an unnecessary library. We test the data decisions automatically and verify
@@ -119,15 +119,15 @@ the small DOM layer manually in a real browser.
 
 ### Phase 3 — Table activation and application wiring
 
-- [ ] Add failing tests for any new pure state transition or selection helper.
-- [ ] Extend `createTableView()` with the explicit selection callback.
-- [ ] Make each row activate on pointer click, Enter, and Space without
+- [x] Add failing tests for any new pure state transition or selection helper.
+- [x] Extend `createTableView()` with the explicit selection callback.
+- [x] Make each row activate on pointer click, Enter, and Space without
   interfering with sortable header buttons.
-- [ ] In `app.js`, open the selected hero from `state.heroes`, synchronize the
+- [x] In `app.js`, open the selected hero from `state.heroes`, synchronize the
   URL, and restore URL-selected heroes after the first list render.
-- [ ] Implement close, Escape, and focus restoration.
-- [ ] Verify unknown IDs, missing data, and image errors do not break the list.
-- [ ] Run `npm test` until green.
+- [x] Implement close, Escape, and focus restoration.
+- [x] Verify unknown IDs, missing data, and image errors do not break the list.
+- [x] Run `npm test` until green.
 
 Justification: the table only reports events and the application owns state.
 This follows the existing separation between renderers and the single app
@@ -135,14 +135,15 @@ render loop.
 
 ### Phase 4 — Responsive CSS and browser verification
 
-- [ ] Add responsive styles for controls, table overflow, table-row focus,
+- [x] Add responsive styles for controls, table overflow, table-row focus,
   dialog layout, close control, large image, and detail sections.
-- [ ] Test narrow and wide viewports manually using the real browser.
-- [ ] Verify mouse, keyboard, Escape, and focus restoration.
-- [ ] Verify a copied URL restores both list state and `hero=<id>`.
-- [ ] Use Network tools to confirm opening, closing, and restoring details make
+- [x] Test narrow and wide viewports manually using the real browser.
+- [x] Verify mouse, keyboard, Escape, and focus restoration.
+- [x] Verify a copied URL restores both list state and `hero=<id>`.
+- [x] Use Network tools to confirm opening, closing, and restoring details make
   no additional request for `all.json`.
-- [ ] Run the complete test suite and record results for shared issue #7.
+- [x] Run the complete test suite.
+- [ ] Record results for shared issue #7.
 
 Justification: responsiveness, focus behavior, images, and network activity
 are browser behaviours. Manual verification complements the focused native
@@ -150,12 +151,12 @@ unit tests without adding testing dependencies.
 
 ## Definition of done
 
-- [ ] Every row can open its hero by pointer and keyboard.
-- [ ] Details contain the full record and `images.lg` with robust fallbacks.
-- [ ] The close control, Escape, and focus restoration work.
-- [ ] Opening and closing modify only `hero` while preserving list URL state.
-- [ ] Copied valid URLs restore the detail; unknown IDs fail safely.
-- [ ] The interface remains usable at narrow and wide viewport sizes.
-- [ ] `npm test` passes and browser checks demonstrate one dataset request.
+- [x] Every row can open its hero by pointer and keyboard.
+- [x] Details contain the full record and `images.lg` with robust fallbacks.
+- [x] The close control, Escape, and focus restoration work.
+- [x] Opening and closing modify only `hero` while preserving list URL state.
+- [x] Copied valid URLs restore the detail; unknown IDs fail safely.
+- [x] The interface remains usable at narrow and wide viewport sizes.
+- [x] `npm test` passes and browser checks demonstrate one dataset request.
 - [ ] Only issue #5 files are committed; `instructions.txt` and `issues.md`
   remain uncommitted.
