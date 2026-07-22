@@ -12,7 +12,7 @@ Numeric operators must compare the same normalized values sorting uses. That
 normalization was extracted into `src/normalize.js` (exporting only
 `normalizeValue`) with the owner's agreement, and both sorting and filtering
 now depend on it. The `hero` URL parameter is owned by issue #5 and is
-preserved untouched.
+validated and round-tripped as `selectedHeroId`.
 
 ## Completion checklist
 
@@ -23,8 +23,8 @@ preserved untouched.
   - Icon (image) is not searchable; every other visible field is.
 - [x] Define the URL contracts:
   - `stateFromUrl(searchParams)` parses and validates `field`, `op`, `q`,
-    `page`, `size`, `sort`, `dir`, and preserves `hero`; malformed values
-    fall back to the canonical defaults.
+    `page`, `size`, `sort`, `dir`, and validates `hero` as `selectedHeroId`;
+    malformed values fall back to the canonical defaults.
   - `stateToUrl(state)` serializes the restorable slice and omits values
     that equal the defaults for shareable URLs.
 - [x] Extend `filterHeroes(heroes, { field, operator, query })` with text and
@@ -42,7 +42,7 @@ preserved untouched.
 - [x] Well-formed parameters parse to the matching state.
 - [x] Unknown field, mismatched operator, non-positive page, unsupported
   size, bad direction, and unknown sort key each fall back to a default.
-- [x] A valid `hero` id survives parsing and serialization untouched.
+- [x] A valid `hero` ID round-trips through parsing and serialization.
 - [x] `stateToUrl` omits defaults and emits only changed parameters.
 - [x] `stateFromUrl(stateToUrl(state))` round-trips the restorable slice.
 
@@ -50,7 +50,8 @@ preserved untouched.
 
 - [x] Searchable-field and operator model derived from descriptor `kind`.
 - [x] URL parsing with per-parameter validation and default fallbacks.
-- [x] URL serialization that omits defaults and preserves `hero`.
+- [x] URL serialization that omits defaults and emits `selectedHeroId` as
+  `hero`.
 - [x] Text-operator filtering (`include`, `exclude`, `fuzzy`).
 - [x] Numeric-operator filtering on shared normalized values.
 - [x] Field and operator controls that emit intent through callbacks.
@@ -60,14 +61,14 @@ preserved untouched.
 - [x] Run the complete test suite and ensure every test passes.
 - [x] Confirm the History-API wiring plan with the application owner (#1)
   before editing the render loop.
-- [ ] Manually verify advanced search and a copied-URL restore in a served
+- [x] Manually verify advanced search and a copied-URL restore in a served
   browser session with the official dataset.
 - [x] Commit only issue #4 implementation and tests.
-- [ ] After integration, verify the advanced-search and URL entries in shared
+- [x] After integration, verify the advanced-search and URL entries in shared
   issue #7 in a browser.
 
 ## Definition of done
 
 Every issue #4 acceptance criterion passes through automated tests or the
-browser checks above, the modules preserve their inputs, and URL state round
--trips without display or fetch logic leaking into the data rules.
+browser checks above, the modules preserve their inputs, and URL state
+round-trips without display or fetch logic leaking into the data rules.

@@ -70,3 +70,7 @@ only full-page render loop.
 All issue #2 acceptance criteria pass through automated tests or the browser
 checks above, the modules preserve their inputs, and the integration team can
 wire them into the shell without display logic leaking into data rules.
+
+Post-integration, issue #4 replaced the Name-only `createSearchControl` with
+`createAdvancedSearchControl` and expanded `applySearch` to carry the active
+field, operator, and query while preserving the page-reset contract.
