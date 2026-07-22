@@ -10,28 +10,28 @@ import {
 /**
  * Parses and validates the restorable list/detail state from the URL.
  * Each parameter falls back to its canonical default when missing or
- * malformed; the `hero` parameter owned by issue #5 is preserved.
+ * malformed. The `hero` parameter owned by issue #5 is validated and
+ * represented as `selectedHeroId`.
  *
  * @param {URLSearchParams|string} searchParams
- * @param {ReadonlyArray<{ key: string, kind: string }>} [columns]
  * @returns {{
  *   field: string, operator: string, query: string, page: number,
  *   pageSize: 10|20|50|100|"all", sortKey: string,
  *   sortDirection: "asc"|"desc", selectedHeroId: number|null
  * }}
  */
-function stateFromUrl(searchParams, columns = COLUMNS) {
+function stateFromUrl(searchParams) {
   const params =
     searchParams instanceof URLSearchParams
       ? searchParams
       : new URLSearchParams(searchParams ?? "");
 
-  const field = isSearchableField(params.get("field"), columns)
+  const field = isSearchableField(params.get("field"))
     ? params.get("field")
     : INITIAL_STATE.field;
-  const operator = isValidOperator(field, params.get("op"), columns)
+  const operator = isValidOperator(field, params.get("op"))
     ? params.get("op")
-    : defaultOperatorForField(field, columns);
+    : defaultOperatorForField(field);
 
   return {
     field,
@@ -39,7 +39,7 @@ function stateFromUrl(searchParams, columns = COLUMNS) {
     query: params.get("q") ?? INITIAL_STATE.query,
     page: parsePage(params.get("page")),
     pageSize: parsePageSize(params.get("size")),
-    sortKey: isColumnKey(params.get("sort"), columns)
+    sortKey: isColumnKey(params.get("sort"))
       ? params.get("sort")
       : INITIAL_STATE.sortKey,
     sortDirection: parseDirection(params.get("dir")),
@@ -49,7 +49,7 @@ function stateFromUrl(searchParams, columns = COLUMNS) {
 
 /**
  * Serializes the restorable slice of state, omitting values that equal
- * the defaults so shared URLs stay clean. A selected hero is preserved.
+ * the defaults so shared URLs stay clean. A selected hero ID is serialized.
  *
  * @param {{
  *   field?: string, operator?: string, query?: string, page?: number,
@@ -101,8 +101,8 @@ function stateToUrl(state) {
   return params;
 }
 
-function isColumnKey(key, columns) {
-  return columns.some((column) => column.key === key);
+function isColumnKey(key) {
+  return COLUMNS.some((column) => column.key === key);
 }
 
 function parsePage(raw) {
