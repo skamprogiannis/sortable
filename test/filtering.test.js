@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+import { COLUMNS } from "../src/columns.js";
 import { filterHeroes } from "../src/filtering.js";
 
 const searchHeroes = [
@@ -101,6 +102,28 @@ test("an unknown search field keeps every hero", () => {
   assert.notStrictEqual(result, searchHeroes);
 });
 
+test("unsupported field kinds keep every hero", () => {
+  const heroes = [
+    { name: "A", icon: "cat.png", mystery: "cat" },
+    { name: "B", icon: "dog.png", mystery: "dog" },
+  ];
+  const columns = [
+    { key: "icon", kind: "image", read: (hero) => hero.icon },
+    { key: "mystery", kind: "mystery", read: (hero) => hero.mystery },
+  ];
+
+  for (const field of ["icon", "mystery"]) {
+    const result = filterHeroes(
+      heroes,
+      { field, operator: "include", query: "cat" },
+      columns,
+    );
+
+    assert.deepEqual(result, heroes);
+    assert.notStrictEqual(result, heroes);
+  }
+});
+
 test("advanced text search does not mutate the source array", () => {
   const sourceNames = searchHeroes.map((hero) => hero.name);
 
@@ -159,4 +182,52 @@ test("a non-numeric query on a numeric field keeps every hero", () => {
 
   assert.deepEqual(result, numericHeroes);
   assert.notStrictEqual(result, numericHeroes);
+});
+
+test("real descriptors read representative nested hero fields", () => {
+  const heroes = [
+    {
+      name: "Match",
+      biography: {
+        fullName: "Bruce Wayne",
+        placeOfBirth: "Gotham City",
+        alignment: "good",
+      },
+      powerstats: { strength: 95 },
+      appearance: {
+        race: "Human",
+        height: ["6'2", "188 cm"],
+        weight: ["220 lb", "100 kg"],
+      },
+    },
+    {
+      name: "Other",
+      biography: {
+        fullName: "Clark Kent",
+        placeOfBirth: "Krypton",
+        alignment: "neutral",
+      },
+      powerstats: { strength: 80 },
+      appearance: {
+        race: "Kryptonian",
+        height: ["6'3", "191 cm"],
+        weight: ["235 lb", "107 kg"],
+      },
+    },
+  ];
+  const searches = [
+    { field: "fullName", operator: "include", query: "bruce" },
+    { field: "strength", operator: "greater-than", query: "90" },
+    { field: "race", operator: "include", query: "human" },
+    { field: "height", operator: "equal", query: "188" },
+    { field: "weight", operator: "equal", query: "100" },
+    { field: "placeOfBirth", operator: "include", query: "gotham" },
+    { field: "alignment", operator: "include", query: "good" },
+  ];
+
+  for (const search of searches) {
+    const names = filterHeroes(heroes, search, COLUMNS).map((hero) => hero.name);
+
+    assert.deepEqual(names, ["Match"]);
+  }
 });

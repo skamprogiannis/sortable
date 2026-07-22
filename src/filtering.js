@@ -16,8 +16,8 @@ const NUMBER_MATCHERS = {
 
 /**
  * Returns the heroes matching the active search field, operator, and query,
- * ignoring case for text. A blank query keeps every hero and an unknown
- * field is a no-op; the source array is never mutated.
+ * ignoring case for text. A blank query, unknown field, or unsupported
+ * descriptor kind keeps every hero; the source array is never mutated.
  *
  * @param {ReadonlyArray<object>} heroes
  * @param {{ field?: string, operator?: string, query?: string }} filterState
@@ -41,7 +41,11 @@ function filterHeroes(heroes, { field = "name", operator = "include", query = ""
     return filterByNumber(heroes, column, operator, needle);
   }
 
-  return filterByText(heroes, column, operator, needle.toLowerCase());
+  if (column.kind === "text") {
+    return filterByText(heroes, column, operator, needle.toLowerCase());
+  }
+
+  return [...heroes];
 }
 
 function filterByText(heroes, column, operator, needle) {
