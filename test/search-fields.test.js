@@ -33,7 +33,7 @@ test("image and unknown kinds advertise no operators", () => {
   assert.deepEqual(operatorsForKind("mystery"), []);
 });
 
-test("searchable fields exclude Icon and keep every other visible column", () => {
+test("searchable fields include supported text and number columns", () => {
   const keys = searchableFields(columns).map((field) => field.key);
 
   assert.deepEqual(keys, ["name", "strength"]);

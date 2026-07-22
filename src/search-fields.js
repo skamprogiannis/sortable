@@ -12,7 +12,7 @@ const NUMBER_OPERATORS = Object.freeze([
  * Returns the operators valid for a descriptor kind. Image and unknown
  * kinds are not searchable and expose no operators.
  *
- * @param {"image"|"text"|"number"} kind
+ * @param {string} kind
  * @returns {readonly string[]}
  */
 function operatorsForKind(kind) {
@@ -28,8 +28,9 @@ function operatorsForKind(kind) {
 }
 
 /**
- * Returns the searchable fields — every visible column except Icon —
- * each paired with its label, kind, and valid operators.
+ * Returns supported text and number fields with their labels, kinds, and
+ * valid operators. For the canonical descriptors, this is every visible
+ * column except Icon.
  *
  * @param {ReadonlyArray<{ key: string, label: string, kind: string }>} [columns]
  * @returns {{ key: string, label: string, kind: string, operators: string[] }[]}
@@ -91,8 +92,6 @@ function defaultOperatorForField(field, columns = COLUMNS) {
 }
 
 export {
-  NUMBER_OPERATORS,
-  TEXT_OPERATORS,
   defaultOperatorForField,
   isSearchableField,
   isValidOperator,

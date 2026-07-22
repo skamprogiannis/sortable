@@ -1,8 +1,8 @@
 /**
  * Converts a raw API value into a comparable value using its column
- * descriptor, or the shared missing marker (`null`). Text columns yield a
- * trimmed string; numeric columns yield a finite number or `null`. This is
- * the single normalization contract shared by sorting and filtering.
+ * descriptor, or the shared missing marker (`null`). Non-numeric columns
+ * yield a trimmed string; numeric columns yield a finite number or `null`.
+ * This contract is shared by sorting and numeric filtering.
  *
  * @param {unknown} rawValue
  * @param {{ key: string, kind: "image" | "number" | "text", isMissing?: (value: unknown) => boolean }} column
