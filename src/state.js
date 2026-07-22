@@ -70,4 +70,21 @@ function applyPage(currentState, page, pageCount) {
   return { ...currentState, page };
 }
 
-export { applyPage, applyPageSize, applySearch, INITIAL_STATE };
+/**
+ * Returns the next state after opening or closing hero details.
+ *
+ * @param {AppState} currentState
+ * @param {number|null} selectedHeroId
+ * @returns {AppState}
+ */
+function applyHeroSelection(currentState, selectedHeroId) {
+  return { ...currentState, selectedHeroId };
+}
+
+export {
+  applyHeroSelection,
+  applyPage,
+  applyPageSize,
+  applySearch,
+  INITIAL_STATE,
+};

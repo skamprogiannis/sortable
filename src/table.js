@@ -5,10 +5,10 @@ import { getAriaSort } from "./sorting.js";
  * and paginated; activating a heading only reports the column key
  * through onSort, so sorting rules stay outside the renderer.
  *
- * @param {{ columns: object[], onSort: (key: string) => void }} options
+ * @param {{ columns: object[], onSort: (key: string) => void, onHeroSelect?: (hero: object, triggerElement: HTMLElement) => void }} options
  * @returns {{ element: HTMLTableElement, update: (view: { rows: object[], sortState: { key: string, direction: "asc"|"desc" } }) => void }}
  */
-function createTableView({ columns, onSort }) {
+function createTableView({ columns, onSort, onHeroSelect = () => {} }) {
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
@@ -46,14 +46,30 @@ function createTableView({ columns, onSort }) {
       return;
     }
 
-    tbody.replaceChildren(...rows.map((hero) => createRow(hero, columns)));
+    tbody.replaceChildren(...rows.map((hero) => createRow(hero, columns, onHeroSelect)));
   }
 
   return { element: table, update };
 }
 
-function createRow(hero, columns) {
+function createRow(hero, columns, onHeroSelect) {
   const row = document.createElement("tr");
+  row.className = "hero-row";
+  // Table rows are not keyboard-focusable by default, so make hero selection available to keyboard users.
+  row.tabIndex = 0;
+  row.setAttribute("aria-label", `Open details for ${hero.name ?? "Unknown hero"}`);
+
+  function selectHero() {
+    onHeroSelect(hero, row);
+  }
+
+  row.addEventListener("click", selectHero);
+  row.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectHero();
+    }
+  });
 
   for (const column of columns) {
     const cell = document.createElement("td");

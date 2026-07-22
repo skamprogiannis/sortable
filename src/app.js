@@ -1,4 +1,5 @@
 import {
+  applyHeroSelection,
   applyPage,
   applyPageSize,
   applySearch,
@@ -6,6 +7,7 @@ import {
 } from "./state.js";
 import { loadHeroes } from "./data.js";
 import { COLUMNS } from "./columns.js";
+import { createDetailsView } from "./details.js";
 import {
   createAdvancedSearchControl,
   createPageSizeControl,
@@ -17,6 +19,7 @@ import { searchableFields } from "./search-fields.js";
 import { nextSortState, sortHeroes } from "./sorting.js";
 import { createTableView } from "./table.js";
 import { stateFromUrl, stateToUrl } from "./url-state.js";
+import { findHeroById } from "./hero-selection.js";
 
 let state = INITIAL_STATE;
 const appElement = document.querySelector("#app");
@@ -73,6 +76,13 @@ function renderApp() {
       renderList();
     },
   });
+  const detailsView = createDetailsView({
+    onClose() {
+      state = applyHeroSelection(state, null);
+      renderDetails();
+      syncUrl();
+    },
+  });
   const tableView = createTableView({
     columns: COLUMNS,
     onSort(columnKey) {
@@ -84,12 +94,22 @@ function renderApp() {
       };
       renderList();
     },
+    onHeroSelect(hero, triggerElement) {
+      state = applyHeroSelection(state, hero.id);
+      renderDetails(triggerElement);
+      syncUrl();
+    },
   });
 
   const controls = document.createElement("section");
   controls.setAttribute("aria-label", "Hero table controls");
   controls.append(searchControl.element, pageSizeControl.element);
-  appElement.replaceChildren(controls, tableView.element, pagerControl.element);
+  appElement.replaceChildren(
+    controls,
+    tableView.element,
+    pagerControl.element,
+    detailsView.element,
+  );
 
   function derivePageView() {
     const filteredHeroes = filterHeroes(
@@ -126,7 +146,19 @@ function renderApp() {
     pageSizeControl.update(state.pageSize);
     tableView.update({ rows: pageView.rows, sortState: readSortState() });
     pagerControl.update(pageView);
+    renderDetails();
     syncUrl();
+  }
+
+  function renderDetails(triggerElement = null) {
+    const hero = findHeroById(state.heroes, state.selectedHeroId);
+
+    if (state.selectedHeroId !== null && hero === null) {
+      // URL IDs are syntactically valid before loading; clear one that is absent from the dataset.
+      state = applyHeroSelection(state, null);
+    }
+
+    detailsView.update(hero, triggerElement);
   }
 
   // Reflect the normalized/clamped state in the URL without navigating.

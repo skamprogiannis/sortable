@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { applyPage, applyPageSize, applySearch } from "../src/state.js";
+import {
+  applyHeroSelection,
+  applyPage,
+  applyPageSize,
+  applySearch,
+} from "../src/state.js";
 
 const listState = Object.freeze({ query: "", page: 4, pageSize: 20 });
 const searchState = Object.freeze({
@@ -83,4 +88,21 @@ test("transitions return new state objects", () => {
   );
   assert.notStrictEqual(applyPageSize(listState, 7), listState);
   assert.notStrictEqual(applyPage(listState, 99, 10), listState);
+});
+
+test("selecting or clearing a hero preserves the list state", () => {
+  const state = {
+    ...searchState,
+    page: 3,
+    sortKey: "weight",
+    sortDirection: "desc",
+    selectedHeroId: null,
+  };
+
+  assert.deepEqual(applyHeroSelection(state, 42), {
+    ...state,
+    selectedHeroId: 42,
+  });
+  assert.deepEqual(applyHeroSelection(state, null), state);
+  assert.notStrictEqual(applyHeroSelection(state, 42), state);
 });
