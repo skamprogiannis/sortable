@@ -28,6 +28,11 @@ test("formatDetailValue displays readable values and missing-value fallbacks", (
   }
 });
 
+test("formatDetailValue treats metric placeholders as missing", () => {
+  assert.equal(formatDetailValue(["-", "0 cm"]), "Not available");
+  assert.equal(formatDetailValue(["- lb", "0 kg"]), "Not available");
+});
+
 test("getLargeImageSource returns a usable large image URL or null", () => {
   assert.equal(getLargeImageSource(hero), "https://example.com/alpha-large.jpg");
   assert.equal(getLargeImageSource({ images: { lg: "" } }), null);

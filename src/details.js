@@ -1,3 +1,6 @@
+import { isMissingValue } from "./normalize.js";
+
+const DETAIL_HEADING_ID = "hero-detail-heading";
 const DETAIL_GROUPS = [
   ["Biography", "biography"],
   ["Appearance", "appearance"],
@@ -13,12 +16,12 @@ const DETAIL_GROUPS = [
  * @returns {string}
  */
 function formatDetailValue(value) {
-  if (isMissingDetailValue(value)) {
+  if (isMissingValue(value)) {
     return "Not available";
   }
 
   if (Array.isArray(value)) {
-    const values = value.filter((item) => !isMissingDetailValue(item));
+    const values = value.filter((item) => !isMissingValue(item));
 
     return values.length > 0 ? values.map(String).join(", ") : "Not available";
   }
@@ -64,6 +67,7 @@ function getDetailSections(hero) {
 function createDetailsView({ onClose }) {
   const dialog = document.createElement("dialog");
   dialog.className = "hero-details";
+  dialog.setAttribute("aria-labelledby", DETAIL_HEADING_ID);
   let triggerElement = null;
 
   dialog.addEventListener("cancel", (event) => {
@@ -96,7 +100,8 @@ function createDetailContent(hero, onClose) {
 
   const header = document.createElement("header");
   const heading = document.createElement("h2");
-  heading.textContent = hero.name ?? "Unknown hero";
+  heading.id = DETAIL_HEADING_ID;
+  heading.textContent = formatHeroName(hero.name);
 
   const closeButton = document.createElement("button");
   closeButton.type = "button";
@@ -125,7 +130,7 @@ function createLargeImage(hero) {
   const image = document.createElement("img");
   image.className = "hero-detail-image";
   image.src = source;
-  image.alt = `Large portrait of ${hero.name ?? "hero"}`;
+  image.alt = `Large portrait of ${formatHeroName(hero.name)}`;
   image.addEventListener("error", () => image.replaceWith(createImageFallback()));
 
   return image;
@@ -147,6 +152,14 @@ function createDetailSection({ title, entries }) {
 
   const heading = document.createElement("h3");
   heading.textContent = title;
+
+  if (entries.length === 0) {
+    const fallback = document.createElement("p");
+    fallback.className = "detail-value-fallback";
+    fallback.textContent = "Not available.";
+    section.append(heading, fallback);
+    return section;
+  }
 
   const list = document.createElement("dl");
   for (const [label, value] of entries) {
@@ -171,16 +184,13 @@ function closeDetails(dialog, triggerElement) {
   triggerElement?.focus();
 }
 
-function isMissingDetailValue(value) {
-  // The API uses null, empty text, and dashes when a detail is unavailable.
-  return value === null
-    || value === undefined
-    || (typeof value === "string" && (value.trim() === "" || value.trim() === "-"));
-}
-
 function formatDetailLabel(label) {
   // Convert API keys such as "fullName" into readable labels.
   return label.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (character) => character.toUpperCase());
+}
+
+function formatHeroName(name) {
+  return isMissingValue(name) ? "Unknown hero" : String(name);
 }
 
 export {

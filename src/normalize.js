@@ -9,7 +9,7 @@
  * @returns {string | number | null}
  */
 function normalizeValue(rawValue, column) {
-  if (isMissing(rawValue, column)) {
+  if (isMissingValue(rawValue, column)) {
     return null;
   }
 
@@ -41,9 +41,17 @@ function normalizeNumber(rawValue, column) {
   return numericValue;
 }
 
-function isMissing(value, column) {
+/**
+ * Reports whether a value is one of the API's shared missing markers or a
+ * column-specific missing value.
+ *
+ * @param {unknown} value
+ * @param {{ isMissing?: (value: unknown) => boolean }} [column]
+ * @returns {boolean}
+ */
+function isMissingValue(value, column) {
   // Columns may define extra missing cases, while common API placeholders work everywhere.
-  if (column.isMissing?.(value)) {
+  if (column?.isMissing?.(value)) {
     return true;
   }
 
@@ -57,7 +65,11 @@ function isMissing(value, column) {
 
   const normalizedValue = value.trim().toLowerCase();
 
-  return normalizedValue === "" || normalizedValue === "-" || normalizedValue === "0 cm" || normalizedValue === "0 kg";
+  return normalizedValue === ""
+    || normalizedValue === "-"
+    || normalizedValue === "- lb"
+    || normalizedValue === "0 cm"
+    || normalizedValue === "0 kg";
 }
 
-export { normalizeValue };
+export { isMissingValue, normalizeValue };

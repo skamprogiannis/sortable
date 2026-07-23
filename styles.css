@@ -239,6 +239,10 @@ th button:hover:not(:disabled) {
   text-align: center;
 }
 
+.detail-value-fallback {
+  color: #596579;
+}
+
 .detail-section {
   margin-top: 1rem;
   padding-top: 1rem;
