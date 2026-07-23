@@ -143,7 +143,7 @@ render loop.
 - [x] Use Network tools to confirm opening, closing, and restoring details make
   no additional request for `all.json`.
 - [x] Run the complete test suite.
-- [ ] Record results for shared issue #7.
+- [x] Record results for shared issue #7.
 
 Justification: responsiveness, focus behavior, images, and network activity
 are browser behaviours. Manual verification complements the focused native
@@ -158,5 +158,5 @@ unit tests without adding testing dependencies.
 - [x] Copied valid URLs restore the detail; unknown IDs fail safely.
 - [x] The interface remains usable at narrow and wide viewport sizes.
 - [x] `npm test` passes and browser checks demonstrate one dataset request.
-- [ ] Only issue #5 files are committed; `instructions.txt` and `issues.md`
+- [x] Only issue #5 files are committed; `instructions.txt` and `issues.md`
   remain uncommitted.
