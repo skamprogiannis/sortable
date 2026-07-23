@@ -42,8 +42,7 @@ button:disabled {
 
 button:focus-visible,
 input:focus-visible,
-select:focus-visible,
-.hero-row:focus-visible {
+select:focus-visible {
   outline: 3px solid #0d6efd;
   outline-offset: 2px;
 }
@@ -136,7 +135,7 @@ th button:hover:not(:disabled) {
   text-decoration: underline;
 }
 
-.hero-row {
+.hero-row-selectable {
   cursor: pointer;
 }
 
@@ -144,8 +143,20 @@ th button:hover:not(:disabled) {
   background: #f7f9fc;
 }
 
-.hero-row:hover {
+.hero-row-selectable:hover {
   background: #e8f1ff;
+}
+
+.hero-details-trigger {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.hero-details-trigger:hover:not(:disabled) {
+  background: transparent;
+  text-decoration: underline;
 }
 
 .hero-icon {

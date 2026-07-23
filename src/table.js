@@ -8,12 +8,14 @@ import { getAriaSort } from "./sorting.js";
  * @param {{ columns: object[], onSort: (key: string) => void, onHeroSelect?: (hero: object, triggerElement: HTMLElement) => void }} options
  * @returns {{ element: HTMLTableElement, update: (view: { rows: object[], sortState: { key: string, direction: "asc"|"desc" } }) => void }}
  */
-function createTableView({ columns, onSort, onHeroSelect = () => {} }) {
+function createTableView({ columns, onSort, onHeroSelect }) {
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
   const tbody = document.createElement("tbody");
   const headerCells = new Map();
+  const heroesByRow = new WeakMap();
+  const canSelectHeroes = typeof onHeroSelect === "function";
 
   for (const column of columns) {
     const cell = document.createElement("th");
@@ -31,6 +33,19 @@ function createTableView({ columns, onSort, onHeroSelect = () => {} }) {
 
   thead.append(headerRow);
   table.append(thead, tbody);
+  if (canSelectHeroes) {
+    tbody.addEventListener("click", (event) => {
+      const row = event.target instanceof Element
+        ? event.target.closest(".hero-row")
+        : null;
+      const hero = row === null ? null : heroesByRow.get(row);
+      const triggerElement = row?.querySelector(".hero-details-trigger");
+
+      if (hero && triggerElement) {
+        onHeroSelect(hero, triggerElement);
+      }
+    });
+  }
 
   function update({ rows, sortState }) {
     for (const [key, cell] of headerCells) {
@@ -46,30 +61,20 @@ function createTableView({ columns, onSort, onHeroSelect = () => {} }) {
       return;
     }
 
-    tbody.replaceChildren(...rows.map((hero) => createRow(hero, columns, onHeroSelect)));
+    const heroRows = rows.map((hero) => createRow(hero, columns, canSelectHeroes));
+    for (let index = 0; index < rows.length; index += 1) {
+      heroesByRow.set(heroRows[index], rows[index]);
+    }
+    tbody.replaceChildren(...heroRows);
   }
 
   return { element: table, update };
 }
 
-function createRow(hero, columns, onHeroSelect) {
+function createRow(hero, columns, canSelectHero) {
   const row = document.createElement("tr");
   row.className = "hero-row";
-  // Table rows are not keyboard-focusable by default, so make hero selection available to keyboard users.
-  row.tabIndex = 0;
-  row.setAttribute("aria-label", `Open details for ${hero.name ?? "Unknown hero"}`);
-
-  function selectHero() {
-    onHeroSelect(hero, row);
-  }
-
-  row.addEventListener("click", selectHero);
-  row.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      selectHero();
-    }
-  });
+  row.classList.toggle("hero-row-selectable", canSelectHero);
 
   for (const column of columns) {
     const cell = document.createElement("td");
@@ -79,6 +84,8 @@ function createRow(hero, columns, onHeroSelect) {
       if (source) {
         cell.append(createIcon(source, hero));
       }
+    } else if (column.key === "name" && canSelectHero) {
+      cell.append(createHeroDetailsTrigger(hero, column));
     } else {
       cell.textContent = formatValue(hero, column);
     }
@@ -87,6 +94,18 @@ function createRow(hero, columns, onHeroSelect) {
   }
 
   return row;
+}
+
+function createHeroDetailsTrigger(hero, column) {
+  const button = document.createElement("button");
+  const heroName = formatValue(hero, column) || "Unknown hero";
+  button.type = "button";
+  button.className = "hero-details-trigger";
+  button.textContent = heroName;
+  button.setAttribute("aria-label", `Open details for ${heroName}`);
+  button.setAttribute("aria-haspopup", "dialog");
+
+  return button;
 }
 
 function createIcon(source, hero) {
