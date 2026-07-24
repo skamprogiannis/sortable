@@ -126,7 +126,7 @@ function createHeroDetailsTrigger(hero, column) {
 function createIcon(source, hero) {
   const image = document.createElement("img");
   image.src = source;
-  image.alt = hero.name ?? "Unknown hero";
+  image.alt = isMissingValue(hero.name) ? "Unknown hero" : String(hero.name);
   image.loading = "lazy";
   image.className = "hero-icon";
   image.addEventListener(
