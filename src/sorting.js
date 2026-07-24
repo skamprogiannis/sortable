@@ -38,7 +38,11 @@ function getAriaSort(sortState, columnKey) {
  *
  * @param {object[]} heroes
  * @param {{ key: string, direction: "asc" | "desc" }} sortState
- * @param {{ key: string, kind: "image" | "number" | "text", read: (hero: object) => unknown }[]} columns
+ * @param {{
+ *   key: string,
+ *   kind: "image" | "number" | "text",
+ *   read: (hero: object) => unknown,
+ * }[]} columns
  * @returns {object[]}
  */
 function sortHeroes(heroes, sortState, columns) {

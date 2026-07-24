@@ -5,7 +5,11 @@
  * This contract is shared by sorting and numeric filtering.
  *
  * @param {unknown} rawValue
- * @param {{ key: string, kind: "image" | "number" | "text", isMissing?: (value: unknown) => boolean }} column
+ * @param {{
+ *   key: string,
+ *   kind: "image" | "number" | "text",
+ *   isMissing?: (value: unknown) => boolean,
+ * }} column
  * @returns {string | number | null}
  */
 function normalizeValue(rawValue, column) {

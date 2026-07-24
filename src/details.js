@@ -62,7 +62,10 @@ function getDetailSections(hero) {
  * The application owns selection state and supplies the close callback.
  *
  * @param {{ onClose: () => void }} options
- * @returns {{ element: HTMLDialogElement, update: (hero: object|null, triggerElement?: HTMLElement|null) => void }}
+ * @returns {{
+ *   element: HTMLDialogElement,
+ *   update: (hero: object|null, triggerElement?: HTMLElement|null) => void,
+ * }}
  */
 function createDetailsView({ onClose }) {
   const dialog = document.createElement("dialog");
@@ -95,7 +98,6 @@ function createDetailsView({ onClose }) {
 }
 
 function createDetailContent(hero, onClose) {
-  // Build fresh content whenever a different hero is selected.
   const content = document.createElement("article");
 
   const header = document.createElement("header");
@@ -120,7 +122,6 @@ function createDetailContent(hero, onClose) {
 }
 
 function createLargeImage(hero) {
-  // Prefer the API's large image, with a text fallback when it is absent or fails.
   const source = getLargeImageSource(hero);
 
   if (source === null) {
@@ -137,7 +138,6 @@ function createLargeImage(hero) {
 }
 
 function createImageFallback() {
-  // Keep the detail view useful even when no portrait can be displayed.
   const fallback = document.createElement("p");
   fallback.className = "detail-image-fallback";
   fallback.textContent = "Large image not available.";
@@ -146,7 +146,6 @@ function createImageFallback() {
 }
 
 function createDetailSection({ title, entries }) {
-  // A definition list pairs each field label with its displayed value.
   const section = document.createElement("section");
   section.className = "detail-section";
 
@@ -176,7 +175,6 @@ function createDetailSection({ title, entries }) {
 }
 
 function closeDetails(dialog, triggerElement) {
-  // Return keyboard focus to the row that opened the details when possible.
   if (dialog.open) {
     dialog.close();
   }
@@ -186,7 +184,9 @@ function closeDetails(dialog, triggerElement) {
 
 function formatDetailLabel(label) {
   // Convert API keys such as "fullName" into readable labels.
-  return label.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (character) => character.toUpperCase());
+  return label
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/^./, (character) => character.toUpperCase());
 }
 
 function formatHeroName(name) {

@@ -166,7 +166,14 @@ function createPageSizeControl({ onPageSizeChange }) {
  * disabled at the range edges so invalid navigation cannot start here.
  *
  * @param {{ onPageChange: (page: number) => void }} options
- * @returns {{ element: HTMLElement, update: (view: { page: number, pageCount: number, totalCount: number }) => void }}
+ * @returns {{
+ *   element: HTMLElement,
+ *   update: (view: {
+ *     page: number,
+ *     pageCount: number,
+ *     totalCount: number,
+ *   }) => void,
+ * }}
  */
 function createPagerControl({ onPageChange }) {
   let currentPage = 1;
