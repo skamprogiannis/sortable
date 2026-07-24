@@ -73,7 +73,9 @@ The descriptor order is Icon, Name, Full Name, Intelligence, Strength, Speed, Du
 | `stateFromUrl(searchParams)` | Parse and validate restorable URL state. |
 | `stateToUrl(state)` | Serialize shareable list/detail state. |
 
-The functions return new arrays or view models and never mutate the canonical dataset or the caller's state.
+The functions never mutate the canonical dataset or the caller's state.
+Filtering may reuse its read-only input when no constraint is active; matching
+filters and sorting return new arrays, and pagination returns a view model.
 
 ## Parallel Core Workstreams
 
