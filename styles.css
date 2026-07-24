@@ -167,6 +167,11 @@ th button:hover:not(:disabled) {
   object-fit: cover;
 }
 
+.image-fallback {
+  color: #596579;
+  font-size: 0.8rem;
+}
+
 .empty-state {
   padding: 2rem;
   color: #596579;

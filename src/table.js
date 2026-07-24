@@ -1,12 +1,25 @@
 import { getAriaSort } from "./sorting.js";
+import { isMissingValue } from "./normalize.js";
+
+const MISSING_VALUE_LABEL = "Not available";
 
 /**
  * Creates the hero table view. Rows arrive already filtered, sorted,
  * and paginated; activating a heading only reports the column key
  * through onSort, so sorting rules stay outside the renderer.
  *
- * @param {{ columns: object[], onSort: (key: string) => void, onHeroSelect?: (hero: object, triggerElement: HTMLElement) => void }} options
- * @returns {{ element: HTMLTableElement, update: (view: { rows: object[], sortState: { key: string, direction: "asc"|"desc" } }) => void }}
+ * @param {{
+ *   columns: object[],
+ *   onSort: (key: string) => void,
+ *   onHeroSelect?: (hero: object, triggerElement: HTMLElement) => void,
+ * }} options
+ * @returns {{
+ *   element: HTMLTableElement,
+ *   update: (view: {
+ *     rows: object[],
+ *     sortState: { key: string, direction: "asc"|"desc" },
+ *   }) => void,
+ * }}
  */
 function createTableView({ columns, onSort, onHeroSelect }) {
   const table = document.createElement("table");
@@ -83,6 +96,8 @@ function createRow(hero, columns, canSelectHero) {
       const source = column.read(hero);
       if (source) {
         cell.append(createIcon(source, hero));
+      } else {
+        cell.append(createIconFallback());
       }
     } else if (column.key === "name" && canSelectHero) {
       cell.append(createHeroDetailsTrigger(hero, column));
@@ -114,16 +129,35 @@ function createIcon(source, hero) {
   image.alt = hero.name ?? "Unknown hero";
   image.loading = "lazy";
   image.className = "hero-icon";
+  image.addEventListener(
+    "error",
+    () => image.replaceWith(createIconFallback()),
+    { once: true },
+  );
 
   return image;
 }
 
 function formatValue(hero, column) {
+  const value = column.read(hero);
+
+  if (isMissingValue(value, column)) {
+    return MISSING_VALUE_LABEL;
+  }
+
   if (typeof column.format === "function") {
     return column.format(hero);
   }
 
-  return String(column.read(hero) ?? "");
+  return String(value);
+}
+
+function createIconFallback() {
+  const fallback = document.createElement("span");
+  fallback.className = "image-fallback";
+  fallback.textContent = "Image unavailable";
+
+  return fallback;
 }
 
 function createEmptyRow(columnCount) {
