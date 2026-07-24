@@ -30,11 +30,10 @@ test("matches the query anywhere inside the name", () => {
   assert.deepEqual(names, ["Batman", "Catwoman", "Iron Man"]);
 });
 
-test("an empty query keeps every hero in a new array", () => {
+test("an empty query reuses the canonical hero array", () => {
   const result = filterHeroes(searchHeroes, { query: "" });
 
-  assert.deepEqual(result, searchHeroes);
-  assert.notStrictEqual(result, searchHeroes);
+  assert.strictEqual(result, searchHeroes);
 });
 
 test("returns no rows when nothing matches", () => {
@@ -91,18 +90,17 @@ test("fuzzy matching ignores case in both directions", () => {
   assert.deepEqual(names, ["Batman"]);
 });
 
-test("an unknown search field keeps every hero", () => {
+test("an unknown search field reuses the canonical hero array", () => {
   const result = filterHeroes(
     searchHeroes,
     { field: "nope", operator: "include", query: "cat" },
     textColumns,
   );
 
-  assert.deepEqual(result, searchHeroes);
-  assert.notStrictEqual(result, searchHeroes);
+  assert.strictEqual(result, searchHeroes);
 });
 
-test("unsupported field kinds keep every hero", () => {
+test("unsupported field kinds reuse the canonical hero array", () => {
   const heroes = [
     { name: "A", icon: "cat.png", mystery: "cat" },
     { name: "B", icon: "dog.png", mystery: "dog" },
@@ -119,8 +117,7 @@ test("unsupported field kinds keep every hero", () => {
       columns,
     );
 
-    assert.deepEqual(result, heroes);
-    assert.notStrictEqual(result, heroes);
+    assert.strictEqual(result, heroes);
   }
 });
 
@@ -173,15 +170,14 @@ test("numeric filtering uses the shared normalization for unit variants", () => 
   assert.deepEqual(numericSearch("weight", "greater-than", "1000"), ["A"]);
 });
 
-test("a non-numeric query on a numeric field keeps every hero", () => {
+test("a non-numeric query reuses the canonical hero array", () => {
   const result = filterHeroes(
     numericHeroes,
     { field: "strength", operator: "greater-than", query: "strong" },
     numericColumns,
   );
 
-  assert.deepEqual(result, numericHeroes);
-  assert.notStrictEqual(result, numericHeroes);
+  assert.strictEqual(result, numericHeroes);
 });
 
 test("real descriptors read representative nested hero fields", () => {

@@ -22,19 +22,23 @@ const NUMBER_MATCHERS = {
  * @param {ReadonlyArray<object>} heroes
  * @param {{ field?: string, operator?: string, query?: string }} filterState
  * @param {ReadonlyArray<{ key: string, kind: string, read: (hero: object) => unknown }>} [columns]
- * @returns {object[]}
+ * @returns {ReadonlyArray<object>}
  */
-function filterHeroes(heroes, { field = "name", operator = "include", query = "" } = {}, columns = COLUMNS) {
+function filterHeroes(
+  heroes,
+  { field = "name", operator = "include", query = "" } = {},
+  columns = COLUMNS,
+) {
   const needle = String(query).trim();
 
   if (needle === "") {
-    return [...heroes];
+    return heroes;
   }
 
   const column = columns.find((candidate) => candidate.key === field);
 
   if (!column) {
-    return [...heroes];
+    return heroes;
   }
 
   if (column.kind === "number") {
@@ -45,7 +49,7 @@ function filterHeroes(heroes, { field = "name", operator = "include", query = ""
     return filterByText(heroes, column, operator, needle.toLowerCase());
   }
 
-  return [...heroes];
+  return heroes;
 }
 
 function filterByText(heroes, column, operator, needle) {
@@ -60,7 +64,7 @@ function filterByNumber(heroes, column, operator, needle) {
   const threshold = Number(needle);
 
   if (!Number.isFinite(threshold)) {
-    return [...heroes]; // A non-numeric query is treated as no constraint.
+    return heroes;
   }
 
   const match = NUMBER_MATCHERS[operator] ?? NUMBER_MATCHERS.equal;
