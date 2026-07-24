@@ -59,6 +59,10 @@ Then verify in the browser:
    reloading the page.
 9. Opening a copied URL in a new tab restores the same controls and rows;
    malformed parameters fall back to defaults.
+10. Opening a hero shows a named detail dialog with the large image and all
+    required data groups; Escape closes it and restores focus.
+11. Page sizes through 100 respond immediately, all 563 rows remain usable,
+    and list/detail interactions make no additional `all.json` requests.
 
 ## Documentation
 
@@ -67,3 +71,5 @@ Then verify in the browser:
 - [Issue #2 implementation plan](docs/issue-2-tasks.md)
 - [Issue #3 sorting plan](docs/issue-3-tasks.md)
 - [Issue #4 advanced-search plan](docs/issue-4-tasks.md)
+- [Issue #5 detail-view plan](docs/issue-5-tasks.md)
+- [Issue #6 hardening evidence](docs/issue-6-tasks.md)
