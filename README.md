@@ -68,6 +68,7 @@ Then verify in the browser:
 
 - [Product requirements](docs/PRD.md)
 - [Architecture](docs/architecture.md)
+- [Codebase guide](docs/codebase-guide.md)
 - [Issue #2 implementation plan](docs/issue-2-tasks.md)
 - [Issue #3 sorting plan](docs/issue-3-tasks.md)
 - [Issue #4 advanced-search plan](docs/issue-4-tasks.md)
