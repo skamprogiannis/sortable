@@ -1,76 +1,70 @@
 # Sortable
 
-A framework-free browser application for searching, sorting, and paginating
-the superhero dataset.
+A framework-free browser application for exploring 563 superhero records through fast, field-aware search, stable sorting, pagination, and detailed profiles.
+
+![Sortable's searchable superhero table](docs/assets/sortable-overview.png)
+
+## Highlights
+
+- Sorts every visible column, with numeric handling for power statistics, height, and weight
+- Filters text by inclusion, exclusion, or ordered fuzzy matching
+- Supports numeric equality and range comparisons
+- Stores filters, sorting, page size, page, and selected hero in the URL
+- Fetches the dataset once, then performs every interaction in memory
+- Provides keyboard-operable headers, dialogs, focus restoration, loading feedback, and error states
+- Uses native HTML, CSS, and JavaScript modules with no runtime dependencies or build step
 
 ## Run locally
 
-The application must be served over HTTP. Run either command from the
-repository root.
-
-### Node.js
-
-```bash
-npx serve . --listen 8000
-```
-
-`npx` may download `serve` into the npm cache on first use.
-
-### Python
+The application uses browser modules and fetches its dataset remotely, so serve the repository over HTTP:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000/>.
+Then open <http://localhost:8000/>. You can also use any equivalent static-file server.
 
-Stop the server with `Ctrl+C`.
+## Search
+
+Choose a field, operator, and query from the controls above the table. Text fields support:
+
+- `includes`
+- `excludes`
+- ordered fuzzy matching
+
+Numeric fields support equality, inequality, greater-than, and less-than comparisons. Height and weight queries use centimetres and kilograms; for example, set Weight to greater than `1000`.
+
+Selecting a hero opens the complete record without losing the current list state. Copying the URL preserves the active search, sort, pagination, and selected hero.
+
+## Design
+
+The application keeps a single state object and derives its visible rows in a predictable sequence:
+
+```text
+fetch once → normalize → filter → sort → paginate → render
+```
+
+Pure data modules handle normalization, filtering, sorting, pagination, and URL serialization. DOM-focused modules own the controls, table, and accessible detail dialog. This separation keeps data behavior independently testable with Node's built-in test runner.
+
+The app reads the versioned [akabab Superhero API dataset](https://github.com/akabab/superhero-api) through a CDN endpoint. Images and character data remain subject to their respective upstream rights.
 
 ## Test
 
-Run the native JavaScript test suite from the repository root:
+Node.js 22 or newer is recommended. No dependency installation is required.
 
 ```bash
 npm test
 ```
 
-No dependency installation or build step is required.
-
-## Verify
-
-Check that the local server returns the application:
-
-```bash
-curl --fail --head http://localhost:8000/
-```
-
-Then verify in the browser:
-
-1. The loading indicator appears and resolves successfully.
-2. The pager reports `Page 1 of 29 (563 heroes)`.
-3. DevTools Network shows exactly one request to `all.json`.
-4. Blocking the `all.json` request and reloading displays a clear error.
-5. The detailed failure remains available in the browser console.
-6. Searching Name for `Cat` includes Catwoman and resets the view to page 1.
-7. Advanced text operators and numeric comparisons filter the selected field.
-   Enter metric Height and Weight thresholds as centimetres and kilograms,
-   such as Weight greater than `1000`.
-8. Search, page size, page, sort key, and sort direction update the URL without
-   reloading the page.
-9. Opening a copied URL in a new tab restores the same controls and rows;
-   malformed parameters fall back to defaults.
-10. Opening a hero shows a named detail dialog with the large image and all
-    required data groups; Escape closes it and restores focus.
-11. Page sizes through 100 respond immediately, all 563 rows remain usable,
-    and list/detail interactions make no additional `all.json` requests.
+The suite covers filtering operators, stable sorting, missing values, pagination, state transitions, URL restoration, hero selection, and detail-view models.
 
 ## Documentation
 
 - [Product requirements](docs/PRD.md)
 - [Architecture](docs/architecture.md)
 - [Codebase guide](docs/codebase-guide.md)
-- [Issue #2 implementation plan](docs/issue-2-tasks.md)
-- [Issue #3 sorting plan](docs/issue-3-tasks.md)
-- [Issue #4 advanced-search plan](docs/issue-4-tasks.md)
-- [Issue #5 detail-view plan](docs/issue-5-tasks.md)
-- [Issue #6 hardening evidence](docs/issue-6-tasks.md)
+- [Hardening and audit evidence](docs/issue-6-tasks.md)
+
+## Team
+
+Built at Zone01 Athens by `skamprogiannis`, `hmim`, and `dkolias`. Git history preserves each contributor's work and attribution.
