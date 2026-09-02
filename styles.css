@@ -1,7 +1,7 @@
 :root {
   color: #1c2330;
   background: #f3f6fb;
-  font-family: Arial, sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
