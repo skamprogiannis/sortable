@@ -2,6 +2,8 @@
 
 A framework-free browser application for exploring 563 superhero records through fast, field-aware search, stable sorting, pagination, and detailed profiles.
 
+**[Live demo](https://skamprogiannis.github.io/sortable/)** · **[CI](https://github.com/skamprogiannis/sortable/actions/workflows/ci.yml)**
+
 ![Sortable's searchable superhero table](docs/assets/sortable-overview.png)
 
 ## Highlights
